@@ -1,4 +1,5 @@
-﻿using Alura.ListaLeitura.App.Negocio;
+﻿using Alura.ListaLeitura.App.Logica;
+using Alura.ListaLeitura.App.Negocio;
 using Alura.ListaLeitura.App.Repositorio;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -21,110 +22,17 @@ namespace Alura.ListaLeitura.App
         public void Configure(IApplicationBuilder app)
         {
             var builder = new RouteBuilder(app);
-            builder.MapRoute("livros/ParaLer", LivrosParaLer);
-            builder.MapRoute("livros/Lidos", LivrosLidos);
-            builder.MapRoute("livros/Lendo", LivrosLendo);
-            builder.MapRoute("Cadastro/NovoLivro/{nome}/{autor}", NovoLivroParaLer);
-            builder.MapRoute("Livros/Detalhes/{id:int}", ExibirDetalhes);
-            builder.MapRoute("Cadastro/NovoLivro", ExibeFormulario);
-            builder.MapRoute("Cadastro/Incluir", ProcessaFormulario);
+            builder.MapRoute("livros/ParaLer", LivroLogica.LivrosParaLer);
+            builder.MapRoute("livros/Lidos", LivroLogica.LivrosLidos);
+            builder.MapRoute("livros/Lendo", LivroLogica.LivrosLendo);
+            builder.MapRoute("Livros/Detalhes/{id:int}", LivroLogica.ExibirDetalhes);
+            builder.MapRoute("Cadastro/NovoLivro/{nome}/{autor}", CadastroLogica.NovoLivroParaLer);
+            builder.MapRoute("Cadastro/NovoLivro", CadastroLogica.ExibeFormulario);
+            builder.MapRoute("Cadastro/Incluir", CadastroLogica.ProcessaFormulario);
 
             var rotas = builder.Build();
             app.UseRouter(rotas);
             //app.Run(Roteamento); 
         }
-
-        private Task ProcessaFormulario(HttpContext context)
-        {
-            var livro = new Livro()
-            {
-                Titulo = context.Request.Form["titulo"].First(),
-                Autor = context.Request.Form["autor"].First()
-            };
-            var repo = new LivroRepositorioCSV();
-            repo.Incluir(livro);
-            return context.Response.WriteAsync("O livro foi adicionado com sucesso");
-        }
-
-        private Task ExibeFormulario(HttpContext context)
-        {
-            var html = CarregaArquivoHtml("Formulario");
-            return context.Response.WriteAsync(html);
-        }
-
-        private string CarregaArquivoHtml(string nomeArquivo)
-        {
-            var nomeCompletoDoArquivo = $"HTML/{nomeArquivo}.html";
-            using (var arquivo = File.OpenText(nomeCompletoDoArquivo))
-            {
-                return arquivo.ReadToEnd();
-            }
-        }
-
-        private Task ExibirDetalhes(HttpContext context)
-        {
-            int id = Convert.ToInt32(context.GetRouteValue("id"));
-            var repo = new LivroRepositorioCSV();
-            var livro = repo.Todos.First(l => l.Id == id);
-            return context.Response.WriteAsync(livro.Detalhes());
-        }
-
-        private Task NovoLivroParaLer(HttpContext context)
-        {
-            var livro = new Livro()
-            {
-                Titulo = context.GetRouteValue("nome").ToString(),
-                Autor = context.GetRouteValue("autor").ToString(),
-        };
-            var repo = new LivroRepositorioCSV();
-            repo.Incluir(livro);
-            return context.Response.WriteAsync("O livro foi adicionado com sucesso");
-        }
-
-        public Task LivrosParaLer(HttpContext context)
-        {                
-            var _repo = new LivroRepositorioCSV();
-            var conteudoArquivo = CarregaArquivoHtml("para-ler");
-            
-            foreach( var livro in _repo.ParaLer.Livros)
-            {
-                conteudoArquivo = conteudoArquivo.
-                    Replace("#NOVO-ITEM", $"<li>{livro.Titulo} - {livro.Autor}</li> #NOVO-ITEM");
-            }
-            conteudoArquivo = conteudoArquivo.Replace("#NOVO-ITEM", "");
-            return context.Response.WriteAsync(conteudoArquivo);
-        }
-
-        public Task LivrosLidos(HttpContext context)
-        {
-            var _repo = new LivroRepositorioCSV();
-            return context.Response.WriteAsync(_repo.Lidos.ToString());
-        }
-
-        public Task LivrosLendo(HttpContext context)
-        {
-            var _repo = new LivroRepositorioCSV();
-            return context.Response.WriteAsync(_repo.Lendo.ToString());
-        }
-
-        public Task Roteamento(HttpContext context)
-        {
-            var _repo = new LivroRepositorioCSV();
-            var caminhosAtendidos = new Dictionary<string, RequestDelegate>
-            {
-                {"/livros/ParaLer", LivrosParaLer },
-                {"/livros/Lendo", LivrosLendo},
-                {"/livros/Lidos", LivrosLidos}
-            };
-
-            if(caminhosAtendidos.ContainsKey(context.Request.Path))
-            {
-                var metodo = caminhosAtendidos[context.Request.Path];
-                return metodo.Invoke(context);
-            }
-            return context.Response.WriteAsync("Caminho Inexistente");
-        }
-
-
     }
 }
