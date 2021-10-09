@@ -1,4 +1,4 @@
-﻿using Alura.ListaLeitura.App.Logica;
+﻿using Alura.ListaLeitura.App.MVC;
 using Alura.ListaLeitura.App.Negocio;
 using Alura.ListaLeitura.App.Repositorio;
 using Microsoft.AspNetCore.Builder;
@@ -22,13 +22,14 @@ namespace Alura.ListaLeitura.App
         public void Configure(IApplicationBuilder app)
         {
             var builder = new RouteBuilder(app);
-            builder.MapRoute("livros/ParaLer", LivroLogica.ParaLer);
-            builder.MapRoute("livros/Lidos", LivroLogica.Lidos);
-            builder.MapRoute("livros/Lendo", LivroLogica.Lendo);
-            builder.MapRoute("Livros/Detalhes/{id:int}", LivroLogica.Detalhes);
-            builder.MapRoute("Cadastro/NovoLivro/{nome}/{autor}", CadastroLogica.NovoLivro);
-            builder.MapRoute("Cadastro/ExibeFormulario", CadastroLogica.ExibeFormulario);
-            builder.MapRoute("Cadastro/Incluir", CadastroLogica.Incluir);
+            builder.MapRoute("{classe}/{metodo}", RoteamentoPadrao.TratamentoPadrao);
+            //builder.MapRoute("livros/ParaLer", LivroLogica.ParaLer);
+            //builder.MapRoute("livros/Lidos", LivroLogica.Lidos);
+            //builder.MapRoute("livros/Lendo", LivroLogica.Lendo);
+            //builder.MapRoute("Livros/Detalhes/{id:int}", LivroLogica.Detalhes);
+            //builder.MapRoute("Cadastro/NovoLivro/{nome}/{autor}", CadastroLogica.NovoLivro);
+            //builder.MapRoute("Cadastro/ExibeFormulario", CadastroLogica.ExibeFormulario);
+            //builder.MapRoute("Cadastro/Incluir", CadastroLogica.Incluir);
 
             var rotas = builder.Build();
             app.UseRouter(rotas);

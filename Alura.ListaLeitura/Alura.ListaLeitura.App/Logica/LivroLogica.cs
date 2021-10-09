@@ -47,6 +47,10 @@ namespace Alura.ListaLeitura.App.Logica
             return context.Response.WriteAsync(_repo.Lendo.ToString());
         }
 
+        public static Task Teste(HttpContext context)
+        {
+            return context.Response.WriteAsync("Nova funcionalidade implementada");
+        }
         
     }
 }
