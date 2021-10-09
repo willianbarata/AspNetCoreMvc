@@ -1,15 +1,5 @@
-﻿using Alura.ListaLeitura.App.MVC;
-using Alura.ListaLeitura.App.Negocio;
-using Alura.ListaLeitura.App.Repositorio;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Routing;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Alura.ListaLeitura.App
 {
@@ -17,11 +7,11 @@ namespace Alura.ListaLeitura.App
     {
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddRouting();
             services.AddMvc();
         }
         public void Configure(IApplicationBuilder app)
         {
+            app.UseDeveloperExceptionPage(); //utilizar apenas para desenvolvimento
             app.UseMvcWithDefaultRoute();
         }
     }
