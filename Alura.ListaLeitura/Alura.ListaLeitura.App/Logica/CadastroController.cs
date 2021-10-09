@@ -13,16 +13,11 @@ namespace Alura.ListaLeitura.App.Logica
 {
     public class CadastroController
     {
-        public static Task Incluir(HttpContext context)
+        public string Incluir(Livro livro)
         {
-            var livro = new Livro()
-            {
-                Titulo = context.Request.Form["titulo"].First(),
-                Autor = context.Request.Form["autor"].First()
-            };
             var repo = new LivroRepositorioCSV();
             repo.Incluir(livro);
-            return context.Response.WriteAsync("O livro foi adicionado com sucesso");
+            return "O livro foi adicionado com sucesso";
         }
 
         public static Task ExibeFormulario(HttpContext context)
@@ -31,21 +26,5 @@ namespace Alura.ListaLeitura.App.Logica
             return context.Response.WriteAsync(html);
         }
 
-        public static Task NovoLivro(HttpContext context)
-        {
-            var livro = new Livro()
-            {
-                Titulo = context.GetRouteValue("nome").ToString(),
-                Autor = context.GetRouteValue("autor").ToString(),
-            };
-            var repo = new LivroRepositorioCSV();
-            repo.Incluir(livro);
-            return context.Response.WriteAsync("O livro foi adicionado com sucesso");
-        }
-
-        public string Teste()
-        {
-            return "Nova funcionalidade implementada";
-        }
     }
 }
