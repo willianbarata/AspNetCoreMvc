@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Alura.ListaLeitura.App.Logica
 {
-    class CadastroLogica
+    public class CadastroController
     {
         public static Task Incluir(HttpContext context)
         {
@@ -41,6 +41,11 @@ namespace Alura.ListaLeitura.App.Logica
             var repo = new LivroRepositorioCSV();
             repo.Incluir(livro);
             return context.Response.WriteAsync("O livro foi adicionado com sucesso");
+        }
+
+        public string Teste()
+        {
+            return "Nova funcionalidade implementada";
         }
     }
 }

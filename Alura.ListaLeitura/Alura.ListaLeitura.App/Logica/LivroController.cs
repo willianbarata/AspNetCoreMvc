@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Alura.ListaLeitura.App.Logica
 {
-    class LivroLogica
+    public class LivroController
     {
         public static Task Detalhes(HttpContext context)
         {
@@ -47,9 +47,9 @@ namespace Alura.ListaLeitura.App.Logica
             return context.Response.WriteAsync(_repo.Lendo.ToString());
         }
 
-        public static Task Teste(HttpContext context)
+        public string Teste()
         {
-            return context.Response.WriteAsync("Nova funcionalidade implementada");
+            return "Nova funcionalidade implementada";
         }
         
     }
